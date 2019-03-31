@@ -1,6 +1,6 @@
 1. Mitä ominaisuuksia olet jo toteuttanut projektiisi?
 Player, Platform ja Level-luokat ovat toteutettu ohjelmaan.
-Spritesheet luokka on osittain tekemättä.
+Spritesheet luokka on osittain tekemättä. Level kenttien lataaminen file.txt tiedostosta ei toimi.
 
 2. Käyttohje
 
