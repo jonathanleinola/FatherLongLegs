@@ -1,20 +1,22 @@
-1. Mit‰ ominaisuuksia olet jo toteuttanut projektiisi?
-Player, Platform ja Level-luokat ovat toteutettu ohjelmaan. Spritesheet luokka on osittain tekem‰tt‰.
+1. Mit ominaisuuksia olet jo toteuttanut projektiisi?
+Player, Platform ja Level-luokat ovat toteutettu ohjelmaan. Spritesheet luokka on osittain tekem√§tt√§.
 
-2. K‰yttˆohje
+2. Kyttohje
 
-  - Voiko ohjelmaa jo ajaa? (kyll‰/ei)
-  - Kuinka ohjelma k‰ynnistet‰‰n?
-  	Ohjelma k‰ynnistet‰‰n game.py tiedostoa ajamalla
-  - Mit‰ sill‰ voi t‰ss‰ vaiheessa tehd‰?
-	Liikkua ja hyppi‰.
+  - Voiko ohjelmaa jo ajaa? Kyll√§
+  - Kuinka ohjelma kynnistetn?
+  	Ohjelma kynnistetn game.py tiedostoa ajamalla
+  - Mit sill voi tss vaiheessa tehd?
+	Liikkua ja hyppi√§. Kamera seuraa pelaajaa.
 3. Aikataulu
 
-  - Kuinka paljon olet jo k‰ytt‰nyt aikaa projektiin?
+  - Kuinka paljon olet jo kyttnyt aikaa projektiin?
   	~20h
   - Onko ilmennyt muutoksia suunnitelman aikatauluun?
 	Ei
 4. Muuta
 
-  - Onko ilmaantunut erityisi‰ ongelmia?
-  - Oletko joutunut tekem‰‰n muutoksia suunnitelmaasi?
+  - Onko ilmaantunut erityisi ongelmia
+   Pieni√§ bugeja
+  - Oletko joutunut tekemn muutoksia suunnitelmaasi
+  - En ole joutunut.
