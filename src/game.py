@@ -122,7 +122,7 @@ class Platform(pygame.sprite.Sprite):
         super().__init__()
  
         self.image = pygame.Surface([width, height])
-        self.image.fill(constants.GREEN)
+        self.image.fill(constants.BLACK)
         
  
         self.rect = self.image.get_rect()
@@ -149,7 +149,7 @@ class Level():
         """ piirr� kaikki levelill� """
  
         # piirr� tausta
-        screen.fill(constants.BLUE)
+        screen.fill(constants.WHITE)
         
  
         # piirr� kaikki spritet
@@ -266,7 +266,7 @@ def main():
     end_it=False
     while (end_it==False):
         screen.fill(constants.WHITE)
-        GAME_FONT.render_to(screen, (40, 350), "Father Long Legs Start Screen", (0, 255, 0))
+        GAME_FONT.render_to(screen, (40, 350), "Father Long Legs Start Screen", constants.BLACK)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -331,11 +331,11 @@ def main():
         active_sprite_list.draw(screen)
         
         if current_position > 100 and current_level_no==0:
-            GAME_FONT.render_to(screen, (40, 350), "level 1", (0, 255, 0))
+            GAME_FONT.render_to(screen, (40, 350), "level 1", constants.BLACK)
 
         
         if current_position > 100 and current_level_no==1:
-            GAME_FONT.render_to(screen, (40, 350), "level 2", (0, 255, 0))
+            GAME_FONT.render_to(screen, (40, 350), "level 2", constants.BLACK)
     
  
         # kaikki piirtamiseen tarvittava ylapuolella
