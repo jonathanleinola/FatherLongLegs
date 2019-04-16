@@ -269,10 +269,13 @@ def main():
         GAME_FONT.render_to(screen, (40, 350), "Father Long Legs Start Screen", constants.BLACK)
         pygame.display.update()
         for event in pygame.event.get():
+            
             if event.type == pygame.KEYDOWN:
                 if event.key==pygame.K_RETURN:
                     end_it=True
-        
+            if event.type == pygame.QUIT:
+                done = True
+                end_it=True
         
     
     
