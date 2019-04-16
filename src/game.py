@@ -281,7 +281,10 @@ def main():
     
     
     # -------- paaohjelma -----------
-    start_time= 0
+    #alustetaan timeri
+    start_time= 0 
+    first=0
+    time_since_enter=0
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -292,6 +295,10 @@ def main():
                     player.go_left()
                 if event.key == pygame.K_RIGHT:
                     player.go_right()
+                    #aloitetaan timeri
+                    if first==0:
+                        start_time=pygame.time.get_ticks()
+                        first=1
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                     player.jump()
                     mixer.play(0,0)
@@ -340,10 +347,16 @@ def main():
         if current_position > 100 and current_level_no==1:
             GAME_FONT.render_to(screen, (40, 350), "level 2", constants.BLACK)
             
-        if start_time>=0:
-            time_since_enter = pygame.time.get_ticks() - start_time
-            message = 'Milliseconds since enter: ' + str(time_since_enter/1000)
+        if start_time>0:
+            time_since_enter = pygame.time.get_ticks()-start_time
+            remainingtime=round(10-time_since_enter/1000,0)
+            message = 'Time remaining ' + str(remainingtime)
             GAME_FONT.render_to(screen, (20,20),message,constants.BLACK)
+        
+        if time_since_enter/1000>10:
+            start_time=pygame.time.get_ticks()
+            main()
+            GAME_FONT.render_to(screen, (400, 400), "Too Slow", constants.BLACK)
  
         # kaikki piirtamiseen tarvittava ylapuolella
  
