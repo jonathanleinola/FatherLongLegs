@@ -5,7 +5,6 @@ from spritesheet import SpriteSheet
 import random
 import os, sys
 
-        
 class Player(pygame.sprite.Sprite):
 
  
@@ -166,10 +165,21 @@ class Level():
  
         for enemy in self.enemy_list:
             enemy.rect.x += shift_x
+    
+    #splitataan level tesktitiedostosta
+    def splitlevel(self,filename):
+        level = []
+        with open(filename) as f:
+            for item in f:
+                level.append([int(i) for i in item.split()])
+        f.close
+        return level
  
  
 
 class Level_01(Level):
+    
+
     
     def __init__(self, player):
         
@@ -177,32 +187,11 @@ class Level_01(Level):
  
         self.level_limit = -2000
         
- 
+        
         # leveys, korkeys, x, y
-        level = [[210, 70, 500, 100],
-                 [210, 70, 480, 200],
-                 [210, 70, 470, 300],
-                 [210, 70, 460, 400],
-                 [210, 70, 450, 500],
-                 [210, 70, 440, 600],
-                 [210, 70, 430, 700],
-                 [210, 70, 420, 699],
-                 [210, 70, 410, 800],
-                 [210, 70, 1500, 1000],
-                 [210, 70, 1500, 1100],
-                 [210, 70, 1500, 300],
-                 [50, 70, 1600, 730],
-                 [210, 70, 1800, 300],
-                 [210, 70, 2000, 300],
-                 [210, 70, 1500, 300],
-                 [210, 70, 1500, 300],
-                 [210, 70, 1500, 300],
-                 [50, 70, 1600, 730],
-                 [210, 70, 1800, 300],
-                 [210, 70, 2000, 300],
-                 ]
- 
-        # k�y l�pi array ja lis�� platformi
+        level = self.splitlevel('level1.txt')
+                
+        # kaydaan lapi array ja lisataan platformi
         for platform in level:
             block = Platform(platform[0], platform[1])
             block.rect.x = platform[2]
@@ -220,11 +209,7 @@ class Level_02(Level):
  
         self.level_limit = -1000
  
-        level = [[210, 30, 450, 570],
-                 [210, 30, 850, 420],
-                 [210, 30, 1000, 520],
-                 [210, 30, 1120, 280],
-                 ]
+        level = self.splitlevel('level2.txt')
  
         for platform in level:
             block = Platform(platform[0], platform[1])
