@@ -281,6 +281,7 @@ def main():
     
     
     # -------- paaohjelma -----------
+    start_time= 0
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -294,7 +295,6 @@ def main():
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                     player.jump()
                     mixer.play(0,0)
-                    
  
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and player.change_x < 0:
@@ -339,7 +339,11 @@ def main():
         
         if current_position > 100 and current_level_no==1:
             GAME_FONT.render_to(screen, (40, 350), "level 2", constants.BLACK)
-    
+            
+        if start_time>=0:
+            time_since_enter = pygame.time.get_ticks() - start_time
+            message = 'Milliseconds since enter: ' + str(time_since_enter/1000)
+            GAME_FONT.render_to(screen, (20,20),message,constants.BLACK)
  
         # kaikki piirtamiseen tarvittava ylapuolella
  
