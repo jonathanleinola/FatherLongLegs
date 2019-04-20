@@ -2,7 +2,7 @@ import pygame
 import re
 import constants
 pygame.init()
-file = open('level.txt', 'w')
+file = open('levels/level.txt', 'w')
 size = width, height = 2000,800
 window = pygame.display.set_mode(size)
 pygame.display.set_caption( "leveleditor" )
