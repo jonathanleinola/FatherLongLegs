@@ -50,7 +50,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.change_x
         
 
-        # testataan osutaanko johonkin
+        # testataan osutaanko johonkin lisataan se block_hit_listaan
         block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
         
         for block in block_hit_list:
@@ -66,7 +66,7 @@ class Player(pygame.sprite.Sprite):
         # liikutaan ylos tai alas
         self.rect.y += self.change_y
         
-        # tsekataan osutaanko johonkin
+        # tsekataan osutaanko johonkin uudelleen ja lisataan se block_hit listaan
         block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
         for block in block_hit_list:
  
@@ -207,7 +207,7 @@ class Level_02(Level):
  
         Level.__init__(self, player)
  
-        self.level_limit = -1000
+        self.level_limit = -2000
  
         level = self.splitlevel('levels/level2.txt')
  
@@ -266,7 +266,20 @@ def main():
     selected="start"
     kill=0
     while (end_it==False):
-        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+                end_it=True
+            if event.type == pygame.KEYDOWN:
+                if event.key==pygame.K_RETURN and selected=='start':
+                    end_it=True
+                elif event.key==pygame.K_RETURN and selected=='quit':
+                    done = True
+                    end_it=True
+                if event.key==pygame.K_UP:
+                    selected="start"
+                elif event.key==pygame.K_DOWN:
+                    selected="quit"
     
         screen.fill(constants.WHITE)
         if selected=="start":
@@ -284,22 +297,6 @@ def main():
         pygame.display.update()
         
         
-        for event in pygame.event.get():
-            
-            if event.type == pygame.KEYDOWN:
-                if event.key==pygame.K_RETURN and selected=='start':
-                    end_it=True
-                elif event.key==pygame.K_RETURN and selected=='quit':
-                    done = True
-                    end_it=True
-                if event.key==pygame.K_UP:
-                    selected="start"
-                elif event.key==pygame.K_DOWN:
-                    selected="quit"
-                
-            if event.type == pygame.QUIT:
-                done = True
-                end_it=True
         
         
     # -------- paaohjelma -----------
@@ -396,8 +393,18 @@ def main():
                 pygame.display.update()
                 i=i+1
             main()
+        
+        if current_level_no==1 and current_position<-2100:
+            start_time=pygame.time.get_ticks()
+            i=0
+            while(i<1000):
+                GAME_FONT.render_to(screen, (200, 400), "!!YOU HAVE MADE IT!!", constants.RED)
+                pygame.display.update()
+                i=i+1
+            main()
     
     pygame.quit()
+    sys.exit()
   
  
 if __name__ == "__main__":
