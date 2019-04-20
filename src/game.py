@@ -102,7 +102,7 @@ class Player(pygame.sprite.Sprite):
         if len(platform_hit_list) > 0 or self.rect.bottom >= constants.SCREEN_HEIGHT:
             self.change_y = -15
  
-    # pelaaja kontrolloi
+    #Hahmon kontrollit
     def go_left(self):
         self.change_x = -6
         self.image=self.walking_frames_r[1]
@@ -251,7 +251,7 @@ def main():
     active_sprite_list = pygame.sprite.Group()
     player.level = current_level
  
-    player.rect.x = 340
+    player.rect.x = 0
     player.rect.y = constants.SCREEN_HEIGHT - player.rect.height
     active_sprite_list.add(player)
  
@@ -309,8 +309,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+
  
             if event.type == pygame.KEYDOWN:
+                if event.key==pygame.K_r:
+                    main()
                 if event.key == pygame.K_LEFT:
                     player.go_left()
                 if event.key == pygame.K_RIGHT:
@@ -349,7 +352,7 @@ def main():
             diff = 120 - player.rect.left
             player.rect.left = 120
             current_level.shift_world(diff)
- 
+
         # jos paasee ekasta tasosta lapi siirrytaan seuraavaan tasoon
         current_position = player.rect.x + current_level.world_shift
         if current_position < current_level.level_limit:
@@ -377,7 +380,7 @@ def main():
             GAME_FONT.render_to(screen, (20,20),message,constants.BLACK)
         
 
-            
+        print(current_position)
  
         # kaikki piirtamiseen tarvittava ylapuolella
  
