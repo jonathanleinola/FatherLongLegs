@@ -21,9 +21,9 @@ class Player(pygame.sprite.Sprite):
         #luodaan hahmo
         self.walking_frames_r = []
         sprite_sheet = SpriteSheet("fatherlonglegssprite.png")
-        image=sprite_sheet.get_image(10, 20, 80, 40)
+        image=sprite_sheet.get_image(12, 12, 80, 40)
         self.walking_frames_r.append(image)
-        image2=sprite_sheet.get_image(110, 20, 80, 55)
+        image2=sprite_sheet.get_image(110, 12, 80, 55)
         self.walking_frames_r.append(image2)
         image3=sprite_sheet.get_image(220, 12, 72, 55)
         self.walking_frames_r.append(image3)
@@ -189,7 +189,7 @@ class Level_01(Level):
         
         
         # leveys, korkeys, x, y
-        level = self.splitlevel('level1.txt')
+        level = self.splitlevel('levels/level1.txt')
                 
         # kaydaan lapi array ja lisataan platformi
         for platform in level:
@@ -209,7 +209,7 @@ class Level_02(Level):
  
         self.level_limit = -1000
  
-        level = self.splitlevel('level2.txt')
+        level = self.splitlevel('levels/level2.txt')
  
         for platform in level:
             block = Platform(platform[0], platform[1])
@@ -227,9 +227,8 @@ def main():
     #initalisoidaan mixeri
     pygame.mixer.init()
     mixer = pygame.mixer.music
-    appfolder=os.path.dirname(os.path.realpath(sys.argv[0]))
-    filename = os.path.join(appfolder, "sound.wav")
-    mixer.load(filename)
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound('sounds/fll.wav'))
+    pygame.mixer.Channel(0).set_volume(0.5)
     
 
     size = [constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT]
@@ -264,27 +263,51 @@ def main():
 
     #startscreen
     end_it=False
+    selected="start"
+    kill=0
     while (end_it==False):
+        
+    
         screen.fill(constants.WHITE)
-        GAME_FONT.render_to(screen, (40, 350), "Father Long Legs Start Screen", constants.BLACK)
+        if selected=="start":
+            GAME_FONT.render_to(screen, (50, 200), "START", constants.BLUE)
+            GAME_FONT.render_to(screen, (50, 300), "QUIT", constants.BLACK)
+        else:
+            GAME_FONT.render_to(screen, (50, 200), "START", constants.BLACK)
+        if selected=="quit":
+            GAME_FONT.render_to(screen, (50, 300), "QUIT", constants.BLUE)
+        
+        
+        GAME_FONT.render_to(screen, (50, 100), "Father Long Legs", constants.BLACK)
+       
+        
         pygame.display.update()
+        
+        
         for event in pygame.event.get():
             
             if event.type == pygame.KEYDOWN:
-                if event.key==pygame.K_RETURN:
+                if event.key==pygame.K_RETURN and selected=='start':
                     end_it=True
+                elif event.key==pygame.K_RETURN and selected=='quit':
+                    done = True
+                    end_it=True
+                if event.key==pygame.K_UP:
+                    selected="start"
+                elif event.key==pygame.K_DOWN:
+                    selected="quit"
+                
             if event.type == pygame.QUIT:
                 done = True
                 end_it=True
         
-    
-    
-    
+        
     # -------- paaohjelma -----------
     #alustetaan timeri
     start_time= 0 
     first=0
     time_since_enter=0
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -301,7 +324,10 @@ def main():
                         first=1
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
                     player.jump()
-                    mixer.play(0,0)
+                    pygame.mixer.Channel(1).play(pygame.mixer.Sound('sounds/sound.wav'))
+                    pygame.mixer.Channel(1).set_volume(0.2)
+                    
+    
  
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT and player.change_x < 0:
@@ -346,26 +372,33 @@ def main():
         
         if current_position > 100 and current_level_no==1:
             GAME_FONT.render_to(screen, (40, 350), "level 2", constants.BLACK)
-            
+        
         if start_time>0:
             time_since_enter = pygame.time.get_ticks()-start_time
-            remainingtime=round(10-time_since_enter/1000,0)
+            remainingtime=round(60-time_since_enter/1000,0)
             message = 'Time remaining ' + str(remainingtime)
             GAME_FONT.render_to(screen, (20,20),message,constants.BLACK)
         
-        if time_since_enter/1000>10:
-            start_time=pygame.time.get_ticks()
-            main()
-            GAME_FONT.render_to(screen, (400, 400), "Too Slow", constants.BLACK)
+
+            
  
         # kaikki piirtamiseen tarvittava ylapuolella
  
         # 60 fps
         clock.tick(60)
- 
         pygame.display.flip()
- 
+        #Timerin alustus
+        if time_since_enter/1000>60:
+            start_time=pygame.time.get_ticks()
+            i=0
+            while(i<1000):
+                GAME_FONT.render_to(screen, (200, 400), "You are too Slow!!", constants.RED)
+                pygame.display.update()
+                i=i+1
+            main()
+    
     pygame.quit()
+  
  
 if __name__ == "__main__":
     main()
