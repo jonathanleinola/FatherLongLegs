@@ -2,9 +2,10 @@ import pygame
 import re
 import constants
 from game import Platform
+
 pygame.init()
 file = open('levels/level.txt', 'a+')
-size = width, height = 2000,800
+size = width, height = 2400,800
 window = pygame.display.set_mode(size)
 pygame.display.set_caption( "leveleditor" )
 
@@ -13,7 +14,7 @@ fps = 60
 
 GAME_FONT = pygame.freetype.Font("font.ttf", 50)
 to_draw = []
-current_color = 0
+
 draw_start = False
 
 def splitlevel(filename):
@@ -27,10 +28,9 @@ def splitlevel(filename):
 level = splitlevel('levels/level.txt')
  
 for platform in level:
-    block = Platform(platform[0], platform[1])
-    block.rect.x = platform[2]
-    block.rect.y = platform[3]
-    to_draw.append(block)
+    rect = pygame.Rect(platform[2],platform[3],platform[0],platform[1])
+    rect.normalize()
+    to_draw += [rect]
 
 
 
@@ -63,6 +63,7 @@ while running:
                 for platform in to_draw:
                     
                     str1=str(platform)
+                    print(str1)
                     str2=re.findall(r'\d+',str1)
                     file.write("%s " % str2[2])
                     file.write("%s " % str2[3])
