@@ -4,6 +4,35 @@ import constants
 from spritesheet import SpriteSheet
 import random
 import os, sys
+from math import pi, sin, cos, atan2
+
+#kopioitua
+def get_angle(origin, destination):
+    """Returns angle in radians from origin to destination.
+       This is the angle that you would get if the points were
+       on a cartesian grid. Arguments of (0,0), (1, -1)
+       return pi/4 (45 deg) rather than  7/4.
+       """
+    x_dist = destination[0] - origin[0]
+    y_dist = destination[1] - origin[1]
+    return atan2(-y_dist, x_dist) % (2 * pi)
+   
+#kopioitua 
+def project(pos, angle, distance):
+    """
+   Returns tuple of pos projected distance at angle
+   adjusted for pygame's y-axis.
+ 
+   EXAMPLES
+ 
+   Move a sprite using it's angle and speed
+   new_pos = project(sprite.pos, sprite.angle, sprite.speed)
+ 
+   Find the relative x and y components of an angle and speed
+   x_and_y = project((0, 0), angle, speed)
+   """
+    return (pos[0] + (cos(angle) * distance),
+            pos[1] - (sin(angle) * distance))
 
 class Player(pygame.sprite.Sprite):
 
@@ -12,12 +41,6 @@ class Player(pygame.sprite.Sprite):
         # kutsutaan parenttia
         super().__init__()
  
-
-        #self.image.fill(RED)
-        #self.image = pygame.image.load("fatherlonglegssprite.png").convert()
-        
-        #self.image = pygame.Surface([width, height]).convert()
-        #self.image.set_colorkey(constants.WHITE)
         #luodaan hahmo
         self.walking_frames_r = []
         sprite_sheet = SpriteSheet("fatherlonglegssprite.png")
@@ -116,6 +139,37 @@ class Player(pygame.sprite.Sprite):
         self.image=self.walking_frames_r[0]
  
  
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self):
+        # kutsutaan parenttia
+        super().__init__()
+        
+        self.image = pygame.Surface([80, 80])
+        self.image.fill(constants.GREEN)
+ 
+        self.rect = self.image.get_rect()
+        self.rect.y = 0
+        self.rect.x = 0
+        #luodaan referenssi
+        self.rect = self.image.get_rect()
+ 
+        # luodaan nopeudet
+        self.change_x = 0
+        self.change_y = 0
+        
+        self.pos = self.rect.center
+        self.speed=.1
+ 
+        # 
+        self.level = None
+        
+    def update(self,dt,player):
+        angle=get_angle(self.rect.center,player.rect.center)
+        self.pos=project(self.pos,angle,self.speed*dt)
+        self.rect.center=self.pos
+    def getposition(self,x,y):
+        return x,y
+ 
 class Platform(pygame.sprite.Sprite):
  
     def __init__(self, width, height):
@@ -126,6 +180,60 @@ class Platform(pygame.sprite.Sprite):
         
  
         self.rect = self.image.get_rect()
+        
+        
+class MovingPlatform(Platform):
+    """ liikkuva taso """
+    change_x = 0
+    change_y = 0
+ 
+    boundary_top = 0
+    boundary_bottom = 0
+    boundary_left = 0
+    boundary_right = 0
+ 
+    player = None
+ 
+    level = None
+ 
+    def update(self):
+ 
+        # liikutaan horisontaalisesti
+        self.rect.x += self.change_x
+ 
+        # Tarkastetaan osuttiinko pelaajaan
+        hit = pygame.sprite.collide_rect(self, self.player)
+        if hit:
+            #Pelaajaan osuttiin
+ 
+            # jos liikutaan oikealle, pelaajan oikea sivu objektin vasen sivu
+            if self.change_x < 0:
+                self.player.rect.right = self.rect.left
+            else:
+                # jos liikutaan vasemmalle tee painvastoin
+                self.player.rect.left = self.rect.right
+ 
+        # liikutaan ylos tai alas
+        self.rect.y += self.change_y
+ 
+        # katsotaan osuttiinko pelaajaan
+        hit = pygame.sprite.collide_rect(self, self.player)
+        if hit:
+            # Jos pelaajaan osutaan
+ 
+            # pelaajan "pohja" on tason ylapuoli
+            if self.change_y < 0:
+                self.player.rect.bottom = self.rect.top
+            else:
+                self.player.rect.top = self.rect.bottom
+ 
+        # tarkastetaan rajat ja jos raja on ylitetty niin kaannytaan toiseen suuntaan
+        if self.rect.bottom > self.boundary_bottom or self.rect.top < self.boundary_top:
+            self.change_y *= -1
+ 
+        cur_pos = self.rect.x - self.level.world_shift
+        if cur_pos < self.boundary_left or cur_pos > self.boundary_right:
+            self.change_x *= -1
  
  
 class Level():
@@ -141,18 +249,17 @@ class Level():
         self.world_shift = 0
  
     def update(self):
-        """ p�ivit� kaikki"""
+        """ paivita kaikki"""
         self.platform_list.update()
-        self.enemy_list.update()
  
     def draw(self, screen):
-        """ piirr� kaikki levelill� """
+        """ piirra kaikki levelilla"""
  
-        # piirr� tausta
+        # piirra tausta
         screen.fill(constants.WHITE)
         
  
-        # piirr� kaikki spritet
+        # piirra kaikki spritet
         self.platform_list.draw(screen)
         self.enemy_list.draw(screen)
  
@@ -191,14 +298,28 @@ class Level_01(Level):
         # leveys, korkeys, x, y
         level = self.splitlevel('levels/level1.txt')
                 
-        # kaydaan lapi array ja lisataan platformi
+        # kaydaan lapi lista ja lisataan taso
         for platform in level:
             block = Platform(platform[0], platform[1])
             block.rect.x = platform[2]
             block.rect.y = platform[3]
             block.player = self.player
             self.platform_list.add(block)
- 
+            
+         # lisataan liikkuva taso
+        block = MovingPlatform(70, 40)
+        block.rect.x = 0
+        block.rect.y = 280
+        block.boundary_left = -50
+        block.boundary_right = 50
+        block.change_x = 1
+        block.change_y = 1
+        block.boundary_bottom=800
+        block.boundary_top=100
+        block.player = self.player
+        block.level = self
+        self.platform_list.add(block)
+        
  
 class Level_02(Level):
  
@@ -238,6 +359,13 @@ def main():
  
     # luodaan pelaaja
     player = Player()
+    
+    #luodaan enemy
+    enemy1 =Enemy()
+    
+    enemy_list = pygame.sprite.Group()
+    enemy_list.add(enemy1)
+ 
  
     # luodaan tasot
     level_list = []
@@ -258,7 +386,7 @@ def main():
     #loopataan niin kauan ku pelaaja painaa close nappia
     done = False
  
-    #kuinka nopeasti kuvaa p�ivitet��n
+    #kuinka nopeasti kuvaa paivitetaan
     clock = pygame.time.Clock()
 
     #startscreen
@@ -306,6 +434,8 @@ def main():
     time_since_enter=0
 
     while not done:
+        # 60 fps
+        dt=clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -340,6 +470,8 @@ def main():
  
         # paivitetaan  level
         current_level.update()
+        
+        enemy1.update(dt,player)
  
         # jos pelaaja on lahella oikeaa puolta siirretaan maailmaa -x suuntaan
         if player.rect.right >= 500:
@@ -365,6 +497,8 @@ def main():
         # kaikki piirtamiseen tarvittava alapuolella
         current_level.draw(screen)
         active_sprite_list.draw(screen)
+        if current_level_no==1:
+            enemy_list.draw(screen)
         
         if current_position > 100 and current_level_no==0:
             GAME_FONT.render_to(screen, (40, 350), "level 1", constants.BLACK)
@@ -379,13 +513,8 @@ def main():
             message = 'Time remaining ' + str(remainingtime)
             GAME_FONT.render_to(screen, (20,20),message,constants.BLACK)
         
-
-        print(current_position)
  
         # kaikki piirtamiseen tarvittava ylapuolella
- 
-        # 60 fps
-        clock.tick(60)
         pygame.display.flip()
         #Timerin alustus
         if time_since_enter/1000>60:
@@ -401,11 +530,19 @@ def main():
             start_time=pygame.time.get_ticks()
             i=0
             while(i<1000):
-                GAME_FONT.render_to(screen, (200, 400), "!!YOU HAVE MADE IT!!", constants.RED)
+                GAME_FONT.render_to(screen, (200, 400), "!!YOU HAVE MADE IT!!", constants.GREEN)
                 pygame.display.update()
                 i=i+1
             main()
-    
+            
+        if current_level_no==1 and pygame.sprite.spritecollide(player, enemy_list, False):
+            i=0
+            while(i<1000):
+                GAME_FONT.render_to(screen, (200, 400), "!!TRY AGAIN!!", constants.RED)
+                pygame.display.update()
+                i=i+1
+            main()
+        
     pygame.quit()
     sys.exit()
   
