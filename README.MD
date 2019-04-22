@@ -22,8 +22,11 @@ Eri kentät ovat .txt tiedostoina /src/levels/ kansiossa ja erilaiset äänet ov
 ## Käyttöohje
 
   - Miten ohjelmaa ajetaan
-	Pääohjelma käynnistetään ajamalla game.py tiedostoa. Kenttäeditori käynnistetään ajamalla leveleditor.py tiedostoa.
+   
+Pääohjelma käynnistetään ajamalla game.py tiedostoa. Kenttäeditori käynnistetään ajamalla leveleditor.py tiedostoa.
+
   - Mahdolliset asetustiedostot ja niiden käyttö
-	Kentät löytyvät /src/levels/ kansiosta ja niitä voi muokata haluamansa mukaan suoraan editorista tai käyttämällä kenttäeditoria.
-	Kentät ovtat tekstitiedostoina ja tasojen määrittely on siinä riveittäin. 
-	Tasot luodaan siten, että ensimmäinen alkio kertoo esteen leveyden, toinen alkio korkeuden, kolmas alkio x- ja neljäs alkio y-koordinaatit.
+
+Kentät löytyvät /src/levels/ kansiosta ja niitä voi muokata haluamansa mukaan suoraan editorista tai käyttämällä kenttäeditoria.
+Kentät ovat tekstitiedostoina ja tasojen määrittely on siinä riveittäin. 
+Tasot luodaan siten, että ensimmäinen alkio kertoo esteen leveyden, toinen alkio korkeuden, kolmas alkio x- ja neljäs alkio y-koordinaatit.
