@@ -6,30 +6,19 @@ import random
 import os, sys
 from math import pi, sin, cos, atan2
 
-#kopioitua
+
 def get_angle(origin, destination):
-    """Returns angle in radians from origin to destination.
-       This is the angle that you would get if the points were
-       on a cartesian grid. Arguments of (0,0), (1, -1)
-       return pi/4 (45 deg) rather than  7/4.
-       """
+    """
+    Palauttaa kulman pisteiden väliltä. esimerkiksi (0,0), (1, -1)
+    palauttaa pi/4.
+    """
     x_dist = destination[0] - origin[0]
     y_dist = destination[1] - origin[1]
     return atan2(-y_dist, x_dist) % (2 * pi)
    
-#kopioitua 
 def project(pos, angle, distance):
     """
-   Returns tuple of pos projected distance at angle
-   adjusted for pygame's y-axis.
- 
-   EXAMPLES
- 
-   Move a sprite using it's angle and speed
-   new_pos = project(sprite.pos, sprite.angle, sprite.speed)
- 
-   Find the relative x and y components of an angle and speed
-   x_and_y = project((0, 0), angle, speed)
+   Palauttaa monikon jonka avulla vihollinen suunnistaa kohti hahmoa
    """
     return (pos[0] + (cos(angle) * distance),
             pos[1] - (sin(angle) * distance))
