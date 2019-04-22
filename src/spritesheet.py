@@ -6,7 +6,7 @@ import pygame
 import constants
  
 class SpriteSheet(object):
-    """ luokka jolla saadaan yksittï¿½iset kuvat spritesheetistï¿½ """
+    """ luokka jolla saadaan yksittaiset kuvat spritesheetistä"""
  
     def __init__(self, file_name):
         # Load the sprite sheet.
@@ -21,7 +21,7 @@ class SpriteSheet(object):
         # kopioi pieni kuva spritesheetistï¿½ pieneksi kuvaksi
         image.blit(self.sprite_sheet, (0, 0), (x, y, width, height))
  
-        # tï¿½ssï¿½ pitï¿½isi olla transparent vï¿½ri
+        # tassa pitaisi olla sama kuin taustan vari
         image.set_colorkey(constants.WHITE)
  
         
