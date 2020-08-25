@@ -6,7 +6,7 @@ import pygame
 import constants
  
 class SpriteSheet(object):
-    """ luokka jolla saadaan yksittaiset kuvat spritesheetistä"""
+    #luokka jolla saadaan yksittaiset kuvat spritesheetistä
  
     def __init__(self, file_name):
         # Load the sprite sheet.

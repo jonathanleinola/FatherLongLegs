@@ -9,7 +9,7 @@ from math import pi, sin, cos, atan2
 
 def get_angle(origin, destination):
     """
-    Palauttaa kulman pisteiden väliltä. esimerkiksi (0,0), (1, -1)
+    Palauttaa kulman pisteiden valilta. esimerkiksi (0,0), (1, -1)
     palauttaa pi/4.
     """
     x_dist = destination[0] - origin[0]
